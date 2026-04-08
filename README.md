@@ -53,7 +53,7 @@ The latest pushed update continues this demo into `ver_1.1`, adding search/filte
 
 If you want to run the more complete demo, this is the folder that should be used.
 
-### `ver_1.0_tess_picture/`
+### `ver_1.0_test_picture/`
 
 This folder contains screenshot assets for the `ver_1.0` demo. These images are used to document the interface and user flow, such as login, registration, TA dashboard views, profile validation, and successful submission states.
 
