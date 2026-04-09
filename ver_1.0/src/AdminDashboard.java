@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -21,8 +20,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-public class AdminDashboard extends JFrame {
-    private final User currentUser;
+public class AdminDashboard extends BaseDashboard {
     private JTable workloadTable;
     private DefaultTableModel workloadModel;
     private JTable applicationsTable;
@@ -31,27 +29,11 @@ public class AdminDashboard extends JFrame {
     private DefaultTableModel jobsModel;
 
     public AdminDashboard(User currentUser) {
-        this.currentUser = currentUser;
-        setTitle("Admin Dashboard - " + currentUser.getSafeDisplayName());
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1080, 700);
-        setLocationRelativeTo(null);
-
-        JMenuBar bar = new JMenuBar();
-        JMenu accountMenu = new JMenu("Account");
-        JMenuItem logoutItem = new JMenuItem("Logout");
-        logoutItem.addActionListener(e -> logout());
-        accountMenu.add(logoutItem);
-        bar.add(accountMenu);
-        setJMenuBar(bar);
-
-        JTabbedPane tabs = new JTabbedPane();
-        tabs.addTab("Workload Monitor", createWorkloadPanel());
-        tabs.addTab("Applications Overview", createApplicationsPanel());
-        tabs.addTab("Jobs Overview", createJobsPanel());
-        tabs.addChangeListener(e -> refreshAll());
-
-        add(tabs);
+        super(currentUser, "Admin Dashboard", 1080, 700);
+        addTab("Workload Monitor", createWorkloadPanel());
+        addTab("Applications Overview", createApplicationsPanel());
+        addTab("Jobs Overview", createJobsPanel());
+        installRefreshOnTabSwitch(this::refreshAll);
         refreshAll();
         setVisible(true);
     }
@@ -231,11 +213,6 @@ public class AdminDashboard extends JFrame {
             return "NEAR LIMIT - monitor closely";
         }
         return "OK";
-    }
-
-    private void logout() {
-        dispose();
-        new LoginFrame();
     }
 
     private static class WorkloadRenderer extends DefaultTableCellRenderer {

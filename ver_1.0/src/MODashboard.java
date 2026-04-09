@@ -11,7 +11,6 @@ import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -29,8 +28,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-public class MODashboard extends JFrame {
-    private final User currentUser;
+public class MODashboard extends BaseDashboard {
     private JTextField titleField;
     private JTextField moduleField;
     private JTextField skillsField;
@@ -47,31 +45,15 @@ public class MODashboard extends JFrame {
     private JTextField applicantSearchField;
 
     public MODashboard(User currentUser) {
-        this.currentUser = currentUser;
-        setTitle("MO Dashboard - " + currentUser.getSafeDisplayName());
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1020, 700);
-        setLocationRelativeTo(null);
-
-        JMenuBar bar = new JMenuBar();
-        JMenu accountMenu = new JMenu("Account");
-        JMenuItem logoutItem = new JMenuItem("Logout");
-        logoutItem.addActionListener(e -> logout());
-        accountMenu.add(logoutItem);
-        bar.add(accountMenu);
-        setJMenuBar(bar);
-
-        JTabbedPane tabs = new JTabbedPane();
-        tabs.addTab("Post Job", createPostJobPanel());
-        tabs.addTab("My Job Posts", createMyJobsPanel());
-        tabs.addTab("Applicants", createApplicantsPanel());
-        tabs.addChangeListener(e -> {
+        super(currentUser, "MO Dashboard", 1020, 700);
+        addTab("Post Job", createPostJobPanel());
+        addTab("My Job Posts", createMyJobsPanel());
+        addTab("Applicants", createApplicantsPanel());
+        installRefreshOnTabSwitch(() -> {
             refreshMyJobs();
             refreshJobSelector();
             refreshApplicants();
         });
-
-        add(tabs);
         refreshMyJobs();
         refreshJobSelector();
         refreshApplicants();
@@ -397,11 +379,6 @@ public class MODashboard extends JFrame {
         }
         FileStorage.saveApplications(applications);
         refreshApplicants();
-    }
-
-    private void logout() {
-        dispose();
-        new LoginFrame();
     }
 
     private static class MatchRenderer extends DefaultTableCellRenderer {

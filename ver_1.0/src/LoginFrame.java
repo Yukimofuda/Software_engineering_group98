@@ -102,8 +102,18 @@ public class LoginFrame extends JFrame {
         String username = usernameField.getText().trim();
         String password = new String(passwordField.getPassword()).trim();
 
-        if (ValidationUtils.isBlank(username) || ValidationUtils.isBlank(password)) {
+        if (ValidationUtils.isBlank(username) && ValidationUtils.isBlank(password)) {
             JOptionPane.showMessageDialog(this, "Please enter both username and password.", "Missing Input",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (ValidationUtils.isBlank(username)) {
+            JOptionPane.showMessageDialog(this, "Username cannot be empty.", "Missing Username",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (ValidationUtils.isBlank(password)) {
+            JOptionPane.showMessageDialog(this, "Password cannot be empty.", "Missing Password",
                     JOptionPane.WARNING_MESSAGE);
             return;
         }

@@ -17,6 +17,7 @@ public class RegisterFrame extends JFrame {
     private final LoginFrame loginFrame;
     private JTextField usernameField;
     private JPasswordField passwordField;
+    private JPasswordField confirmPasswordField;
     private JTextField displayNameField;
     private JComboBox<String> roleBox;
 
@@ -36,17 +37,19 @@ public class RegisterFrame extends JFrame {
 
         usernameField = new JTextField(16);
         passwordField = new JPasswordField(16);
+        confirmPasswordField = new JPasswordField(16);
         displayNameField = new JTextField(16);
         roleBox = new JComboBox<String>(new String[] {"TA", "MO"});
 
         addRow(form, gbc, 0, "Username:", usernameField);
         addRow(form, gbc, 1, "Password:", passwordField);
-        addRow(form, gbc, 2, "Display Name:", displayNameField);
-        addRow(form, gbc, 3, "Role:", roleBox);
+        addRow(form, gbc, 2, "Confirm Password:", confirmPasswordField);
+        addRow(form, gbc, 3, "Display Name:", displayNameField);
+        addRow(form, gbc, 4, "Role:", roleBox);
 
         JButton registerButton = new JButton("Create Account");
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.gridwidth = 2;
         form.add(registerButton, gbc);
 
@@ -69,11 +72,18 @@ public class RegisterFrame extends JFrame {
     private void registerUser() {
         String username = usernameField.getText().trim();
         String password = new String(passwordField.getPassword()).trim();
+        String confirmPassword = new String(confirmPasswordField.getPassword()).trim();
         String displayName = displayNameField.getText().trim();
         String role = String.valueOf(roleBox.getSelectedItem());
 
-        if (ValidationUtils.isBlank(username) || ValidationUtils.isBlank(password) || ValidationUtils.isBlank(displayName)) {
+        if (ValidationUtils.isBlank(username) || ValidationUtils.isBlank(password)
+                || ValidationUtils.isBlank(confirmPassword) || ValidationUtils.isBlank(displayName)) {
             JOptionPane.showMessageDialog(this, "All fields are required.", "Validation", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (!password.equals(confirmPassword)) {
+            JOptionPane.showMessageDialog(this, "Password confirmation does not match.", "Validation",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
 

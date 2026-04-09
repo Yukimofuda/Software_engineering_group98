@@ -11,7 +11,6 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -29,8 +28,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-public class TADashboard extends JFrame {
-    private final User currentUser;
+public class TADashboard extends BaseDashboard {
     private JTextField nameField;
     private JTextField emailField;
     private JTextField studentIdField;
@@ -46,30 +44,14 @@ public class TADashboard extends JFrame {
     private DefaultTableModel applicationsModel;
 
     public TADashboard(User currentUser) {
-        this.currentUser = currentUser;
-        setTitle("TA Dashboard - " + currentUser.getSafeDisplayName());
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(980, 680);
-        setLocationRelativeTo(null);
-
-        JMenuBar bar = new JMenuBar();
-        JMenu accountMenu = new JMenu("Account");
-        JMenuItem logoutItem = new JMenuItem("Logout");
-        logoutItem.addActionListener(e -> logout());
-        accountMenu.add(logoutItem);
-        bar.add(accountMenu);
-        setJMenuBar(bar);
-
-        JTabbedPane tabs = new JTabbedPane();
-        tabs.addTab("My Profile", createProfilePanel());
-        tabs.addTab("Browse Jobs", createBrowseJobsPanel());
-        tabs.addTab("My Applications", createApplicationsPanel());
-        tabs.addChangeListener(e -> {
+        super(currentUser, "TA Dashboard", 980, 680);
+        addTab("My Profile", createProfilePanel());
+        addTab("Browse Jobs", createBrowseJobsPanel());
+        addTab("My Applications", createApplicationsPanel());
+        installRefreshOnTabSwitch(() -> {
             refreshJobs();
             refreshApplications();
         });
-
-        add(tabs);
         loadProfile();
         refreshJobs();
         refreshApplications();
@@ -413,11 +395,6 @@ public class TADashboard extends JFrame {
         }
         FileStorage.saveApplications(applications);
         refreshApplications();
-    }
-
-    private void logout() {
-        dispose();
-        new LoginFrame();
     }
 
     private static class StatusRenderer extends DefaultTableCellRenderer {
