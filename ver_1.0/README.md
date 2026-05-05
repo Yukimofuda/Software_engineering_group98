@@ -46,6 +46,20 @@ New updates in this version:
 - polished the login page and shared dashboard shell to give the demo a stronger presentation-ready feel
 - smoke test output now includes both AI-readiness and admin-alert summaries
 
+## Version 1.4 Highlights
+
+Version `1.4` is the current integration milestone for this demo build. Compared with `ver_1.3`, it focuses on three visible improvements:
+
+- AI scoring is no longer only an abstract interface. The project now includes a transport-ready placeholder provider that can call a chat-completions style API when environment variables are configured.
+- Admin users can move from passive monitoring to decision support. The dashboard now highlights high-load TA risk and gives replacement suggestions based on predicted fit and projected workload.
+- The UI is more presentation-ready. The login screen, shared dashboard shell, and admin overview panels now communicate version status and system readiness more clearly during demos.
+
+In practical demo terms, `ver_1.4` is the first version where we can show:
+
+- a switchable scoring path between local rule-based matching and AI-placeholder matching
+- workload-aware admin recommendations for reallocation decisions
+- a cleaner, more polished interface for login and management workflows
+
 ## Run
 
 ```bash
