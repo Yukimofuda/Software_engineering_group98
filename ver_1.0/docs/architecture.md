@@ -60,3 +60,11 @@ software_engineering/
 - `MODashboard`: adds aligned per-column filters and automatically generates notifications when applicant decisions are made
 - `AdminDashboard`: replaces single keyword search bars with aligned field-by-field filters and expands AI explanation visibility
 - `LoginFrame` and `BaseDashboard`: strengthen visible button outlines and final-demo interaction clarity
+
+
+## Iteration 1.7 Notification Extension
+
+- `NotificationService.notifyProfileRequired` adds a deduplicated unread reminder when a TA profile is missing or incomplete.
+- `NotificationService.markProfileReminderResolved` clears the reminder after a complete profile is saved.
+- `NotificationService.notifyJobClosed` sends job-closure alerts to TAs with active applications when MO or Admin closes a job.
+- Notifications remain stored in `data/notifications.csv`, preserving the no-database coursework constraint.
