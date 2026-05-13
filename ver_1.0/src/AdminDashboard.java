@@ -149,6 +149,16 @@ public class AdminDashboard extends BaseDashboard {
         workloadStatusFilter = new JComboBox<String>(new String[] {"ALL", "OK", "NEAR LIMIT", "OVERLOAD"});
         filterPanel.add(workloadStatusFilter);
 
+        FilterToolbar compactFilter = new FilterToolbar("Search workload", this::refreshWorkload);
+        compactFilter.addField("TA Username", workloadUsernameFilterField);
+        compactFilter.addField("Full Name", workloadNameFilterField);
+        compactFilter.addField("Email", workloadEmailFilterField);
+
+        JPanel filters = new JPanel(new BorderLayout(6, 6));
+        filters.setOpaque(false);
+        filters.add(compactFilter, BorderLayout.NORTH);
+        filters.add(filterPanel, BorderLayout.CENTER);
+
         recommendationArea = new JTextArea();
         recommendationArea.setEditable(false);
         recommendationArea.setLineWrap(true);
@@ -169,7 +179,7 @@ public class AdminDashboard extends BaseDashboard {
 
         JPanel tableWrap = new JPanel(new BorderLayout(8, 8));
         tableWrap.setOpaque(false);
-        tableWrap.add(filterPanel, BorderLayout.NORTH);
+        tableWrap.add(filters, BorderLayout.NORTH);
         tableWrap.add(new JScrollPane(workloadTable), BorderLayout.CENTER);
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tableWrap, recommendationPanel);
@@ -181,17 +191,21 @@ public class AdminDashboard extends BaseDashboard {
         actions.setOpaque(false);
         JButton refreshButton = new JButton("Refresh");
         JButton recommendationButton = new JButton("Refresh Advice");
+        JButton aiDialogButton = new JButton("Ask AI Assistant");
         JButton exportButton = new JButton("Export CSV Report");
         styleActionButton(refreshButton, new Color(225, 234, 238), ACCENT_COLOR);
         styleActionButton(recommendationButton, new Color(240, 229, 206), new Color(70, 56, 32));
+        styleActionButton(aiDialogButton, new Color(220, 232, 222), new Color(36, 78, 54));
         styleActionButton(exportButton, ACCENT_COLOR, Color.WHITE);
         actions.add(refreshButton);
         actions.add(recommendationButton);
+        actions.add(aiDialogButton);
         actions.add(exportButton);
         panel.add(actions, BorderLayout.SOUTH);
 
         refreshButton.addActionListener(e -> refreshWorkload());
         recommendationButton.addActionListener(e -> refreshRecommendationPanel());
+        aiDialogButton.addActionListener(e -> openAiAssistantDialog());
         exportButton.addActionListener(e -> exportWorkloadReport());
         installFieldListener(workloadUsernameFilterField, this::refreshWorkload);
         installFieldListener(workloadNameFilterField, this::refreshWorkload);
@@ -253,9 +267,19 @@ public class AdminDashboard extends BaseDashboard {
         filterPanel.add(new JLabel(""));
         filterPanel.add(new JLabel(""));
 
+        FilterToolbar compactFilter = new FilterToolbar("Search applications", this::refreshApplications);
+        compactFilter.addField("TA", applicationTaFilterField);
+        compactFilter.addField("Job", applicationJobFilterField);
+        compactFilter.addField("Module", applicationModuleFilterField);
+        compactFilter.addField("Status", applicationStatusFilterField);
+        JPanel filters = new JPanel(new BorderLayout(6, 6));
+        filters.setOpaque(false);
+        filters.add(compactFilter, BorderLayout.NORTH);
+        filters.add(filterPanel, BorderLayout.CENTER);
+
         JPanel center = new JPanel(new BorderLayout(8, 8));
         center.setOpaque(false);
-        center.add(filterPanel, BorderLayout.NORTH);
+        center.add(filters, BorderLayout.NORTH);
         center.add(new JScrollPane(applicationsTable), BorderLayout.CENTER);
         panel.add(center, BorderLayout.CENTER);
 
@@ -333,9 +357,19 @@ public class AdminDashboard extends BaseDashboard {
         jobStatusFilterField = new JTextField();
         filterPanel.add(jobStatusFilterField);
 
+        FilterToolbar compactFilter = new FilterToolbar("Search jobs", this::refreshJobs);
+        compactFilter.addField("MO", jobMoFilterField);
+        compactFilter.addField("Title", jobTitleFilterField);
+        compactFilter.addField("Module", jobModuleFilterField);
+        compactFilter.addField("Status", jobStatusFilterField);
+        JPanel filters = new JPanel(new BorderLayout(6, 6));
+        filters.setOpaque(false);
+        filters.add(compactFilter, BorderLayout.NORTH);
+        filters.add(filterPanel, BorderLayout.CENTER);
+
         JPanel center = new JPanel(new BorderLayout(8, 8));
         center.setOpaque(false);
-        center.add(filterPanel, BorderLayout.NORTH);
+        center.add(filters, BorderLayout.NORTH);
         center.add(new JScrollPane(jobsTable), BorderLayout.CENTER);
         panel.add(center, BorderLayout.CENTER);
 
@@ -483,6 +517,15 @@ public class AdminDashboard extends BaseDashboard {
         recommendationTitleLabel.setText("<html><div style='width:300px;'>Recommendation focus: " + user.getSafeDisplayName() + "</div></html>");
         recommendationArea.setText(AdminRecommendationService.buildRecommendationReportForTa(user.id));
         recommendationArea.setCaretPosition(0);
+    }
+
+
+    private void openAiAssistantDialog() {
+        refreshRecommendationPanel();
+        String context = recommendationArea == null ? AdminRecommendationService.buildGlobalAlertSummary()
+                : recommendationArea.getText();
+        AIConversationDialog dialog = new AIConversationDialog(this, context);
+        dialog.setVisible(true);
     }
 
     private void refreshApplications() {

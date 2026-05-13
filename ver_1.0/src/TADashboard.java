@@ -184,9 +184,19 @@ public class TADashboard extends BaseDashboard {
         filterPanel.add(new JLabel(""));
         filterPanel.add(new JLabel(""));
 
+        FilterToolbar compactFilter = new FilterToolbar("Search open jobs", this::refreshJobs);
+        compactFilter.addField("Title", jobTitleFilterField);
+        compactFilter.addField("Module", jobModuleFilterField);
+        compactFilter.addField("Skills", jobSkillsFilterField);
+        compactFilter.addField("Location", jobLocationFilterField);
+        JPanel filters = new JPanel(new BorderLayout(6, 6));
+        filters.setOpaque(false);
+        filters.add(compactFilter, BorderLayout.NORTH);
+        filters.add(filterPanel, BorderLayout.CENTER);
+
         JPanel center = new JPanel(new BorderLayout(8, 8));
         center.setOpaque(false);
-        center.add(filterPanel, BorderLayout.NORTH);
+        center.add(filters, BorderLayout.NORTH);
         center.add(new JScrollPane(jobsTable), BorderLayout.CENTER);
         panel.add(center, BorderLayout.CENTER);
 
@@ -256,9 +266,18 @@ public class TADashboard extends BaseDashboard {
         filterPanel.add(new JLabel(""));
         filterPanel.add(new JLabel(""));
 
+        FilterToolbar compactFilter = new FilterToolbar("Search applications", this::refreshApplications);
+        compactFilter.addField("Job", applicationJobFilterField);
+        compactFilter.addField("Module", applicationModuleFilterField);
+        compactFilter.addField("Status", applicationStatusFilterField);
+        JPanel filters = new JPanel(new BorderLayout(6, 6));
+        filters.setOpaque(false);
+        filters.add(compactFilter, BorderLayout.NORTH);
+        filters.add(filterPanel, BorderLayout.CENTER);
+
         JPanel center = new JPanel(new BorderLayout(8, 8));
         center.setOpaque(false);
-        center.add(filterPanel, BorderLayout.NORTH);
+        center.add(filters, BorderLayout.NORTH);
         center.add(new JScrollPane(applicationsTable), BorderLayout.CENTER);
         panel.add(center, BorderLayout.CENTER);
 
